@@ -1,5 +1,5 @@
 from process_pipeline import *
-
+import streamlit as st
 class LSTM(nn.Module):
     def __init__(self,in_channels,out_channels,hidden=[128,64]):
         super(LSTM, self).__init__()
@@ -30,7 +30,7 @@ pipeY = Outputs_pipeline.fit()
 #ne juste pas oublier de faire un torch.tensor().float() juste après
 #load pipeline de test on mets X [20,14] dedans et il va convertir les dates
 Test_pipeline = preprocessing_pipeline()
-Test_pipeline.load("C:/Users\hugom\OneDrive\Documents\Sensorea_AI/Xtest_pipeline")#bien vérifier les paths
+Test_pipeline.load("C:/Users\hugom\OneDrive\Documents\Sensorea_AI/test_pipeline")#bien vérifier les paths
 testpipe = Test_pipeline.fit() #création de la fonction
 
 #load du model
@@ -52,12 +52,15 @@ def predict(model,x):
 #au final x a une shape 18
 #x = [date[1]->datatime,date,Cmd[9]->[0,1],water[1]->float,elec[1]->float,gaz[1]->float,temp[1]->float,occ[1}->[0,1]]
 def conv_predict(x,model=model_test,pipe=testpipe):
-    X = pipe(x)
+    X =pipe(x)
+    X = torch.tensor(X).float()
     y_pred = predict(model,X)
     return y_pred
 def train(dataframe,pipeY=pipeY,pipeX=pipeX,lr=0.5e-4,epoch = 1200):
     X = pipeX(dataframe)
+    X = torch.tensor(X).float()
     y = pipeY(dataframe)
+    y = torch.tensor(y).float()
     model = LSTM(18, 9)
     optimizer = optim.Adam(model.parameters(), lr)
     criterion = nn.MSELoss()
@@ -69,3 +72,4 @@ def train(dataframe,pipeY=pipeY,pipeX=pipeX,lr=0.5e-4,epoch = 1200):
         "out_channels": 9,
         "hidden": (128, 64)
     }, "lstm_model.pt")
+    return model, train_losses, val_losses
