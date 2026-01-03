@@ -19,18 +19,18 @@ class LSTM(nn.Module):
 #appel des fonctions de traitement de l'entrée : elle vont faire exactement ce qui est mis dans le notebook
 #pas besoin d'utiliser dans une utilisation ponctuelle c'est pour quand on veut faire un réentrainement
 Inputs_pipeline = preprocessing_pipeline()
-Inputs_pipeline.load("C:/Users\hugom\OneDrive\Documents\Sensorea_AI\X_pipeline")#bien vérifier les paths
+Inputs_pipeline.load("X_pipeline")#bien vérifier les paths
 pipeX = Inputs_pipeline.fit() #création de la fonction
 
 Outputs_pipeline = preprocessing_pipeline()
-Outputs_pipeline.load("C:/Users\hugom\OneDrive\Documents\Sensorea_AI\y_pipeline")
+Outputs_pipeline.load("y_pipeline")
 # si on veut modifier les param il faut appeler Outputs_pipeline.tree et changer la clef param pour la fonction qu'on veut changer
 pipeY = Outputs_pipeline.fit()
 
 #ne juste pas oublier de faire un torch.tensor().float() juste après
 #load pipeline de test on mets X [20,14] dedans et il va convertir les dates
 Test_pipeline = preprocessing_pipeline()
-Test_pipeline.load("C:/Users\hugom\OneDrive\Documents\Sensorea_AI/test_pipeline")#bien vérifier les paths
+Test_pipeline.load("test_pipeline")#bien vérifier les paths
 testpipe = Test_pipeline.fit() #création de la fonction
 
 #load du model
